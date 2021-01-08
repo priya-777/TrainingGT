@@ -14,5 +14,8 @@ public class DisplayHelloWorld {
     public String displayHelloWorld() {
         return "Hello World";
     }
-
+    @PostMapping("/home")
+    public String displayHelloWorld_PostMapping(){
+        return "Hello World";
+    }
 }
