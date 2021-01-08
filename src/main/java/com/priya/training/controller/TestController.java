@@ -10,11 +10,11 @@ import java.lang.reflect.Member;
 @RestController
 public class TestController {
 
-    @GetMapping("/gettest")
+    @GetMapping("/getTest")
     public String getTest() {
         return "Get Mapping done";
     }
-    @PostMapping("/posttest")
+    @PostMapping("/postTest")
     public String postTest(){
         return "Post Mapping done";
     }
