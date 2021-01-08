@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.priya.training.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Member;
 @RestController
-public class DisplayHelloWorld {
+public class TestController {
 
-    @GetMapping("/")
-    public String displayHelloWorld() {
-        return "Hello World";
+    @GetMapping("/getTest")
+    public String getTest() {
+        return "Get Mapping done";
     }
-
+    @PostMapping("/postTest")
+    public String postTest(){
+        return "Post Mapping done";
+    }
 }
