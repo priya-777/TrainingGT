@@ -10,10 +10,6 @@ import java.lang.reflect.Member;
 @RestController
 public class DisplayHelloWorld {
 
-    @GetMapping("/")
-    public String displayHelloWorld() {
-        return "Hello World";
-    }
     @PostMapping("/home")
     public String displayHelloWorld_PostMapping(){
         return "Hello World";
