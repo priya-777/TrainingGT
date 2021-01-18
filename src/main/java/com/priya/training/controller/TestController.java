@@ -95,18 +95,22 @@ public class TestController {
     Map<Integer,Employee> employeesdetails=new HashMap<>();
 
     @GetMapping("/retrieveEmployee")
-    public void retrieveEmployee()
+    public String retrieveEmployee()
     {
         if(employeesdetails.isEmpty())
-            System.out.println("No Employees Yet");
+            return "No Employees Yet";
         else
-        for(Integer id : employeesdetails.keySet())
-        System.out.println(id+" "+employeesdetails.get(id).getPhoneNumber() );
+           return employeesdetails.toString();
     }
     @RequestMapping(value="addEmployee",method = RequestMethod.POST)
     public String addEmployee(@RequestBody Employee employee) {
-        employeesdetails.put(employee.getId(),employee);
-        return "new Employee added";
+        try{
+            if(employee.getId()==null) { throw new NullPointerException("Enter Employee id");}
+            employeesdetails.put(employee.getId(), employee);
+            return "new Employee added";
+        }
+        catch(Exception e){ return e+" "; }
+
     }
 
     @PutMapping("/updateEmployee")

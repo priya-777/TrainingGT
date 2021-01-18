@@ -39,6 +39,9 @@ public class Employee {
         this.phoneNumber = phoneNumber;
     }
 
+    public String toString(){
+        return "Name : "+name+" id : "+id+" Phone Number"+phoneNumber;
+    }
 
 
 }
