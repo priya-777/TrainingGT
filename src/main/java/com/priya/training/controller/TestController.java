@@ -2,11 +2,14 @@ package com.priya.training.controller;
 
 import com.priya.training.models.Employee;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.StringValueExp;
+import javax.naming.InvalidNameException;
 import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,24 +44,51 @@ public class TestController {
 
     @PostMapping("/postEmployeesTest")
     public String postEmployeesTest(String employeeName) {
-        employees.putIfAbsent(employees.size() + 1, employeeName);
-        return "new Employee added";
+        try {
+            validateEmployeeName(employeeName);
+            employees.put(employees.size() + 1, employeeName);
+            return "Employee added successfully";
+        }
+        catch(Exception e) {
+            return e+" ";
+        }
     }
 
+    static void validateEmployeeName(String employeeName)throws InvalidEmployeeNameException{
+        if(employeeName != null && employeeName.matches("^[a-zA-Z]*$"))
+            System.out.println("new Employee added");
+        else
+            throw new InvalidEmployeeNameException("not a valid Name");
+
+    }
+
+
     @RequestMapping(value="putEmployeesTest/{id}/{employeeName}",method = RequestMethod.PUT)
-    public void putEmployeesTest(@PathVariable Integer id,@PathVariable String employeeName) {
-        employees.replace(id,employeeName);
+    public String putEmployeesTest(@PathVariable String id,@PathVariable String employeeName) {
+        try {
+            Integer tempId=Integer.parseInt(id);
+            validateEmployeeName(employeeName);
+            if (!employees.containsKey(tempId)) { return "Employee Not Found"; }
+            employees.replace(tempId, employeeName);
+            return "Updated";
+        }
+        catch(NumberFormatException e){ return e+""; }
+        catch(InvalidEmployeeNameException e) { return e+" "; }
     }
 
     //returning status using HttpStatus
     @RequestMapping(value="deleteEmployeesTest/{id}",method= RequestMethod.DELETE)
-    public ResponseEntity<Integer> deleteEmployeesTest(@PathVariable Integer id) {
-        if(employees.containsKey(id)) {
-            employees.remove(id);
-            return new ResponseEntity<>(id,HttpStatus.OK);
+    public ResponseEntity<String> deleteEmployeesTest(@PathVariable String id) {
+        try {
+            Integer tempId = Integer.parseInt(id);
+            if (employees.containsKey(tempId)) {
+                employees.remove(tempId);
+                return new ResponseEntity<>(id, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity<>(id,HttpStatus.NOT_FOUND);
         }
-        else
-        return new ResponseEntity<>(id,HttpStatus.NOT_FOUND);
+        catch(NumberFormatException e) { return new ResponseEntity<>(id,HttpStatus.BAD_REQUEST); }
     }
     //CRUD Using Employee class in HashMap
 
@@ -73,33 +103,39 @@ public class TestController {
         for(Integer id : employeesdetails.keySet())
         System.out.println(id+" "+employeesdetails.get(id).getPhoneNumber() );
     }
-    @PostMapping("/addEmployee")
-    public String addEmployee(@RequestBody Employee employee)
-    {
+    @RequestMapping(value="addEmployee",method = RequestMethod.POST)
+    public String addEmployee(@RequestBody Employee employee) {
         employeesdetails.put(employee.getId(),employee);
         return "new Employee added";
     }
 
     @PutMapping("/updateEmployee")
-    public String updateEmployee(Integer id,String phoneNumber)
-    {
-        if(employeesdetails.containsKey(id)) {
-            Employee newEmployee = employeesdetails.get(id);
+    public String updateEmployee( String id, String phoneNumber) {
+        try {
+            Integer tempId=Integer.parseInt(id);
+            Long tempPhoneNumber=Long.parseLong(phoneNumber);
+            if (!employeesdetails.containsKey(tempId)) { return "Employee Not Found"; }
+            Employee newEmployee = employeesdetails.get(tempId);
             newEmployee.setPhoneNumber(phoneNumber);
-            employeesdetails.replace(id, newEmployee);
+            employeesdetails.replace(tempId, newEmployee);
             return "Updated";
         }
-        return "Employee Not Found";
+        catch(NumberFormatException e){ return e+""; }
     }
 
     @DeleteMapping("/deleteEmployee")
-    public String deleteEmployee(Integer id)
-    {
-        if(employeesdetails.containsKey(id)) {
-            employeesdetails.remove(id);
-            return "Deleted";
+    public String deleteEmployee(String id) {
+        try {
+            Integer.parseInt(id);
+            if (employeesdetails.containsKey(id)) {
+                employeesdetails.remove(id);
+                return "Deleted";
+            }
+            return "Employee Not Found";
         }
-        return "Employee Not Found";
+        catch(NumberFormatException e){
+            return e+" ";
+        }
     }
 }
 
