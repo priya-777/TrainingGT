@@ -3,6 +3,17 @@ package com.priya.training.models;
 public class Employee {
     private String name;
     private Integer id;
+    private String phoneNumber;
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    private Integer age;
 
     public String getName() {
         return name;
@@ -28,6 +39,9 @@ public class Employee {
         this.phoneNumber = phoneNumber;
     }
 
-    private String phoneNumber;
+    public String toString(){
+        return "Name : "+name+" id : "+id+" Phone Number"+phoneNumber;
+    }
+
 
 }
